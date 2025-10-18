@@ -1,0 +1,28 @@
+~timescale 1ns/1s
+
+module traffic_light(
+    input  logic clk, reset,
+    output logic [1:0] signal
+);
+
+    typedef enum logic [1:0] {RED=2'b00, YELLOW=2'b01, GREEN=2'b10} state_t;
+    state_t current, next;
+
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset)
+            current <= RED;
+        else
+            current <= next;
+    end
+
+    always_comb begin
+        case (current)
+            RED:     next = GREEN;
+            GREEN:   next = YELLOW;
+            YELLOW:  next = RED;
+            default: next = RED;
+        endcase
+    end
+
+    assign signal = current;
+endmodule
