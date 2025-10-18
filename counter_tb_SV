@@ -1,0 +1,38 @@
+`timescale 1ns/1ps
+
+module counter_tb;
+    logic clk;
+    logic reset;
+    logic enable;
+    logic [3:0] count;
+
+    counter uut (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .count(count)
+    );
+
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;  
+    end
+
+    initial begin
+        $monitor("Time=%0t | Reset=%b | Enable=%b | Count=%d", $time, reset, enable, count);
+
+        reset = 1;
+        enable = 0;
+        #10 reset = 0;  
+
+        enable = 1;
+        #100;
+
+        enable = 0;
+        #30;
+
+        enable = 1;
+        #50;
+        $finish;
+    end
+endmodule
