@@ -1,0 +1,31 @@
+`timescale 1ns/1ps
+
+module tb_traffic_light;
+    logic clk;
+    logic reset;
+    logic [1:0] signal;
+
+    traffic_light uut (
+        .clk(clk),
+        .reset(reset),
+        .signal(signal)
+    );
+
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk; 
+    end
+
+    initial begin
+        $monitor("Time=%0t | Reset=%b | Signal=%b", $time, reset, signal);
+
+        reset = 1;
+        #20;
+        reset = 0;
+
+        repeat(10) @(posedge clk);
+        $display("Simulation complete!");
+        $finish;
+    end
+
+endmodule
